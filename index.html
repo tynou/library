@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <script src="./main.js" defer></script>
+        <title>Library</title>
+    </head>
+    <body>
+        <header>
+            <h1 class="title">library</h1>
+            <button class="add-book-btn" id="addBookBtn">+ Add Book</button>
+        </header>
+
+        <main>
+            <div class="book-container" id="bookGrid">
+                
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Copyright @</p>
+            <a href="https://github.com/tynou" target="_blank">tynou</a>
+        </footer>
+
+        <div class="modal" id="addBookModal">
+            <form class="add-book-form" id="addBookForm">
+                <h1 class="form-title">Add a new book</h1>
+                <input type="text" id="title" required placeholder="Title">
+                <textarea id="about" form="addBookForm" placeholder="Tell us about the book"></textarea>
+                <input type="text" id="author" required placeholder="Author">
+                <input type="number" id="pageCount" min="1" placeholder="Page count">
+                <div class="is-read">
+                    <label for="isRead">Have you read this book?</label>
+                    <input class="checkbox" type="checkbox" id="isRead">
+                </div>
+                <button class="submit-btn" type="submit">Add Book</button>
+            </form>
+        </div>
+
+        <div class="overlay" id="overlay"></div>
+    </body>
+</html>
