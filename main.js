@@ -23,9 +23,8 @@ class Library {
 }
 
 class Book {
-    constructor(title, about, author, pageCount, isRead) {
+    constructor(title, author, pageCount, isRead) {
         this.title = title;
-        this.about = about;
         this.author = author;
         this.pageCount = pageCount;
         this.isRead = isRead;
@@ -39,16 +38,18 @@ const bookGrid = document.getElementById("bookGrid");
 const addBookModal = document.getElementById("addBookModal");
 const addBookForm = document.getElementById("addBookForm");
 const overlay = document.getElementById("overlay");
+const errorMsg = document.getElementById("error");
 
 const openBookModal = () => {
     addBookForm.reset();
-    addBookModal.classList.add("active")
-    overlay.classList.add("active")
+    addBookModal.classList.add("active");
+    overlay.classList.add("active");
 }
 
 const closeBookModal = () => {
-    addBookModal.classList.remove("active")
-    overlay.classList.remove("active")
+    addBookModal.classList.remove("active");
+    overlay.classList.remove("active");
+    errorMsg.classList.remove("active");
 }
 
 const resetBookGrid = () => {
@@ -63,15 +64,12 @@ const updateBookGrid = () => {
 }
 
 const createBookCard = (book) => {
-    console.log(book);
     const card = document.createElement("div");
     const cardHeadGroup = document.createElement("div");
     const title = document.createElement("p");
     const author = document.createElement("p");
     const pageCount = document.createElement("p");
-    const separator1 = document.createElement("div");
-    const about = document.createElement("p");
-    const separator2 = document.createElement("div");
+    const separator = document.createElement("div");
     const readBtn = document.createElement("button");
     const removeBtn = document.createElement("button");
 
@@ -81,17 +79,14 @@ const createBookCard = (book) => {
     author.classList.add("card-author");
     pageCount.classList.add("card-page-count");
     readBtn.classList.add("card-read-btn");
-    separator1.classList.add("card-sep");
-    separator2.classList.add("card-sep");
-    about.classList.add("card-about");
+    separator.classList.add("card-sep");
     removeBtn.classList.add("card-remove-btn");
 
     readBtn.onclick = toggleRead;
     removeBtn.onclick = removeBook;
 
     title.textContent = book.title;
-    about.textContent = book.about ? book.about : "No Description";
-    author.textContent = book.author;
+    author.textContent = `By: ${book.author}`;
     pageCount.textContent = `${book.pageCount} pages`;
 
     removeBtn.textContent = "Remove";
@@ -107,11 +102,9 @@ const createBookCard = (book) => {
     cardHeadGroup.appendChild(title);
     cardHeadGroup.appendChild(author);
     cardHeadGroup.appendChild(pageCount);
-    cardHeadGroup.appendChild(readBtn);
     card.appendChild(cardHeadGroup);
-    card.appendChild(separator1);
-    card.appendChild(about);
-    card.appendChild(separator2);
+    card.appendChild(separator);
+    card.appendChild(readBtn);
     card.appendChild(removeBtn);
 
     bookGrid.appendChild(card);
@@ -119,14 +112,11 @@ const createBookCard = (book) => {
 
 const getBookFromInput = () => {
     const title = document.getElementById("title").value;
-    const about = document.getElementById("about").value;
     const author = document.getElementById("author").value;
     const pageCount = document.getElementById("pageCount").value;
     const isRead = document.getElementById("isRead").checked;
 
-    console.log(title, about, author, pageCount, isRead);
-
-    return new Book(title, about, author, pageCount, isRead);
+    return new Book(title, author, pageCount, isRead);
 }
 
 const addBook = (e) => {
@@ -135,6 +125,7 @@ const addBook = (e) => {
     const newBook = getBookFromInput();
 
     if (library.isInLibrary(newBook)) {
+        errorMsg.classList.add("active");
         return;
     }
 
@@ -152,7 +143,7 @@ const removeBook = (e) => {
 }
 
 const toggleRead = (e) => {
-    const title = e.target.parentNode.firstChild.innerHTML;
+    const title = e.target.parentNode.firstChild.firstChild.innerHTML;
 
     const book = library.getBook(title);
     book.isRead = !book.isRead;
@@ -163,3 +154,16 @@ addBookBtn.onclick = openBookModal;
 overlay.onclick = closeBookModal;
 addBookForm.onsubmit = addBook;
 
+window.onload = () => {
+    for (let i = 0; i <= 50; i++) {
+        const newBook = new Book(String(Math.round(Math.random() * 100)), "me", Math.round(Math.random() * 1000), Boolean(Math.round(Math.random())));
+
+        if (library.isInLibrary(newBook)) {
+            continue;
+        }
+
+        library.addBook(newBook);
+    }
+
+    updateBookGrid();
+}
