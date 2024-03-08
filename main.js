@@ -131,6 +131,8 @@ const addBook = (e) => {
 
     library.addBook(newBook);
 
+    saveBooks();
+
     updateBookGrid();
     closeBookModal();
 }
@@ -139,6 +141,7 @@ const removeBook = (e) => {
     const title = e.target.parentNode.firstChild.firstChild.innerHTML;
     
     library.removeBook(title);
+    saveBooks();
     updateBookGrid();
 }
 
@@ -147,6 +150,19 @@ const toggleRead = (e) => {
 
     const book = library.getBook(title);
     book.isRead = !book.isRead;
+    saveBooks();
+    updateBookGrid();
+}
+
+const saveBooks = () => {
+    localStorage.setItem("library", JSON.stringify(library.books));
+}
+
+const loadBooks = () => {
+    const books = JSON.parse(localStorage.getItem("library"));
+    if (books) {
+        library.books = books.filter((book) => new Book(book.title, book.author, book.pageCount, book.isRead));
+    }
     updateBookGrid();
 }
 
@@ -154,16 +170,4 @@ addBookBtn.onclick = openBookModal;
 overlay.onclick = closeBookModal;
 addBookForm.onsubmit = addBook;
 
-window.onload = () => {
-    for (let i = 0; i <= 50; i++) {
-        const newBook = new Book(String(Math.round(Math.random() * 100)), "me", Math.round(Math.random() * 1000), Boolean(Math.round(Math.random())));
-
-        if (library.isInLibrary(newBook)) {
-            continue;
-        }
-
-        library.addBook(newBook);
-    }
-
-    updateBookGrid();
-}
+window.onload = loadBooks;
